@@ -56,13 +56,14 @@ class Grape::Middleware::Logger < Grape::Middleware::Globals
       throw(:error, error)
     else
       status, _, _ = *@app_response
-      after(status)
+      after(status, @app_response)
     end
     @app_response
   end
 
-  def after(status)
+  def after(status, response)
     logger.info "Completed #{status} in #{((Time.now - start_time) * 1000).round(2)}ms"
+    logger.info "request_log: status: #{status}, parameters: #{parameters}, response: #{response.body}"
     logger.info ''
   end
 
